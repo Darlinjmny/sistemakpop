@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use Illuminate\Pagination\Paginator; // Asegúrate de que esta línea esté correcta
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,9 +21,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Paginator::useBootstrap(); 
-        if (app()->environment('production')) { 
-            URL::forceScheme('https'); 
+        Paginator::useBootstrap();
+
+        if (app()->environment('production')) {
+            URL::forceScheme('https');
         }
     }
 }
