@@ -77,6 +77,26 @@ class GroupController extends Controller
         return redirect()->route('groups.index')->with('success', 'Grupo eliminado exitosamente.');
     }
 
+     public function statistics()
+    {
+        // 1. Calcular el total de grupos registrados
+        $totalGroups = Group::count();
+
+        // 2. Obtener la cantidad de grupos por compañía
+        // Esto agrupa los registros por la columna 'company' y cuenta cuántos grupos hay en cada compañía.
+        $groupsByCompany = Group::select('company', \DB::raw('COUNT(*) as count'))
+            ->groupBy('company')
+            ->get();
+
+        // 3. Preparar los datos para Chart.js
+        // Aquí se extraen las compañías y las cantidades de grupos para usarlas en el gráfico.
+        $companies = $groupsByCompany->pluck('company'); // Lista de nombres de compañías
+        $counts = $groupsByCompany->pluck('count');      // Lista de cantidades de grupos por compañía
+
+        // 4. Enviar las variables a la vista
+        return view('groups.statistics', compact('totalGroups', 'companies', 'counts'));
+    }
+    
     public function exportToCSV()
     {
         // 1. Obtener grupos con conteo de álbumes y miembros
